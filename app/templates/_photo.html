@@ -1,0 +1,20 @@
+<table class="table table-hover">
+    <tr>
+        <td width="70px">
+            <a href="{{ url_for('main.index', username=photo.author.username) }}">
+                <img src="{{ photo.author.avatar(70) }}" />
+            </a>
+        </td>
+        <td>
+            {% set user_link %}
+                <a href="{{ url_for('main.index', username=photo.author.username) }}">
+                    {{ photo.author.username }}
+                </a>
+            {% endset %}
+            {{ user_link }} sent a photo {{ moment(photo.timestamp).fromNow() }}
+            <br>
+            <span id="photo{{ photo.id }}">{{ photo.description }}</span>
+            <br><br>
+        </td>
+    </tr>
+</table>
