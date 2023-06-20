@@ -1,0 +1,4 @@
+FLASK_APP=instagram.py
+FLASK_RUN_PORT=8000
+FLASK_ENV=development
+FLASK_DEBUG=True
