@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <h1>Sign In</h1>
+            <form action="{{ url_for('auth.login')}}" method="post">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                  {{ form.username.label }}
+                  {{ form.username(class_="form-control", size=32) }}
+                </div>
+                <div class="mb-3">
+                  {{ form.password.label }}
+                  {{ form.password(class_="form-control", size=32) }}
+                </div>
+                <div class="mb-3 form-check">
+                {{ form.remember_me(class_="form-check-input") }}  {{ form.remember_me.label }}
+              
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+              <br>
+              <p> New User? <a href="{{ url_for('auth.register') }}">Click to Register!</a></p>
+              <p>Forgot Your Password? <a href="{{ url_for('auth.login') }}">Click to Reset It</a></p>
+        </div>
+    </div>
+    <br>
+    
+{% endblock %}
