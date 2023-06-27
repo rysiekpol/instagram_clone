@@ -1,4 +1,4 @@
-from flask import redirect, url_for, flash, request
+from flask import redirect, url_for, flash, request, render_template
 from flask_login import login_user, current_user
 
 from werkzeug.urls import url_parse
@@ -22,6 +22,7 @@ def validate_login_form(form: LoginForm):
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('main.index')
         return redirect(next_page)
+
     
 def validate_registration_form(form: RegistrationForm):
     if form.validate_on_submit():

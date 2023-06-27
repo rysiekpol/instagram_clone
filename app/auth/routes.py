@@ -8,9 +8,13 @@ from app.auth.services import *
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
-    authenticate_user()
+    auth = authenticate_user()
+    if auth:
+        return auth
     form = LoginForm()
-    validate_login_form(form)
+    validate = validate_login_form(form)
+    if validate:
+        return validate
     return render_template('auth/login.html', title='Sign In', form=form)
 
 @bp.route('/logout')
@@ -20,8 +24,13 @@ def logout():
 
 @bp.route('/register', methods=['GET','POST'])
 def register():
-    authenticate_user()
+    auth = authenticate_user()
+    if auth:
+        return auth
     form = RegistrationForm()
-    validate_registration_form(form)
+    validate = validate_registration_form(form)
+    if validate:
+        return validate
+    
     return render_template('auth/register.html', title='Register',
                            form=form)

@@ -14,6 +14,7 @@
             {{ user_link }} sent a photo {{ moment(photo.timestamp).fromNow() }}
             <br>
             <span id="photo{{ photo.id }}">{{ photo.description }}</span>
+            <img src="{{ photo.path }}" class="rounded mx-auto d-block" alt="photo{{ photo.id }}">
             <br><br>
         </td>
     </tr>
