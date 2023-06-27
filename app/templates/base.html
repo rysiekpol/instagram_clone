@@ -72,51 +72,68 @@
 </html>
 
 {% block scripts %}
+    {{ moment.include_moment() }}
+    {{ moment.lang(g.locale) }}
 
-<script>
-    // Get all like buttons
-    var likeButtons = document.querySelectorAll('[id^="likeButton"]');
-  
-    // Add click event listeners to each like button
-    likeButtons.forEach(function(button) {
-      button.addEventListener('click', function() {
-        // Extract the photo ID from the button's ID
-        var photoId = button.id.replace('likeButton', '');
-  
-        // Send an AJAX request to like or unlike the photo
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/like/' + photoId, true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-            // If the request is successful, update the like count and button state
-            var response = JSON.parse(xhr.responseText);
-            var likeCountElement = document.querySelector('#likeCount' + photoId);
-            var iElement = button.querySelector('i');
-  
-            likeCountElement.textContent = response.likes;
-  
-            if (response.liked) {
-              // User has liked the photo, update the button and disable it
-              console.log("liked");
-              iElement.classList.add('bi-star-fill');
-              iElement.classList.remove('bi-star');
+    <script>
+        // Get all like buttons
+        var likeButtons = document.querySelectorAll('[id^="likeButton"]');
+    
+        // Add click event listeners to each like button
+        likeButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            // Extract the photo ID from the button's ID
+            var photoId = button.id.replace('likeButton', '');
+    
+            // Send an AJAX request to like or unlike the photo
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/like/' + photoId, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function() {
+            if (xhr.status === 200) {
+                // If the request is successful, update the like count and button state
+                var response = JSON.parse(xhr.responseText);
+                var likeCountElement = document.querySelector('#likeCount' + photoId);
+                var iElement = button.querySelector('i');
+    
+                likeCountElement.textContent = response.likes;
+    
+                if (response.liked) {
+                // User has liked the photo, update the button and disable it
+                console.log("liked");
+                iElement.classList.add('bi-star-fill');
+                iElement.classList.remove('bi-star');
+                } else {
+                    console.log("unliked");
+
+                // User has unliked the photo, update the button
+                iElement.classList.add('bi-star');
+                iElement.classList.remove('bi-star-fill');
+                }
             } else {
-                console.log("unliked");
-
-              // User has unliked the photo, update the button
-              iElement.classList.add('bi-star');
-              iElement.classList.remove('bi-star-fill');
+                // If there was an error, display an error message
+                console.error('Error liking/unliking photo: ' + xhr.status);
             }
-          } else {
-            // If there was an error, display an error message
-            console.error('Error liking/unliking photo: ' + xhr.status);
-          }
-        };
-        xhr.send();
-      });
-    });
-  </script>
+            };
+            xhr.send();
+        });
+        });
+    </script>
+
+    <script>
+      function toggleComments(photoId) {
+        var commentsContainer = document.getElementById('comments' + photoId);
+        var commentButton = document.getElementById('commentButton' + photoId);
+    
+        if (commentsContainer.style.display === 'none') {
+          commentsContainer.style.display = 'block';
+          commentButton.classList.add('active');
+        } else {
+          commentsContainer.style.display = 'none';
+          commentButton.classList.remove('active');
+        }
+      }
+    </script>
   
 {% endblock %}
 

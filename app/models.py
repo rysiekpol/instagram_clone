@@ -43,7 +43,17 @@ class Photo(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     likes = db.Column(db.Integer, default=0)
+    comments = db.relationship('Comment', backref='photo', lazy='dynamic')
 
     def __repr__(self):
         return f'<Post {self.description}>'
-    
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.String(260))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    photo_id = db.Column(db.Integer, db.ForeignKey('photo.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return f'<Comment {self.comment}>'
