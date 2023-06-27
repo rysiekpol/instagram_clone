@@ -8,15 +8,16 @@ from app.models import Photo
 def validate_and_add_photo(form: UploadForm):
     if form.validate_on_submit():
         filename = photos.save(form.photo.data)
-        file_url = url_for('main.get_file', filename=filename)
+        print(filename)
+        #file_url = url_for('main.get_file', filename=filename)
 
-        photo = Photo(path=file_url, description=form.description.data, author=current_user)
+        photo = Photo(path=filename, description=form.description.data, author=current_user)
         db.session.add(photo)
         db.session.commit()
         flash('Your photo is now live!')
         return redirect(url_for('main.index'))
     else:
-        file_url = None
+        filename = None
 
 
 def paginate_photos():

@@ -7,11 +7,11 @@ from app.models import Photo
 from app.main.services import validate_and_add_photo, paginate_photos
 
 
-@bp.route('/uploads/<filename>')
+@bp.route('/display/<filename>')
 @login_required
-def get_file(filename):
-    return send_from_directory(current_app.config['UPLOADED_PHOTOS_DEST'],
-                               filename)
+def display_image(filename):
+    return redirect(url_for('static', filename='photos/' + filename),
+                    code=301)
 
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/index', methods=['GET', 'POST'])

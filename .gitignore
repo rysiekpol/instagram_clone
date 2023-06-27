@@ -173,3 +173,5 @@ logs/
 #.idea/
 
 # End of https://www.toptal.com/developers/gitignore/api/flask
+/static
+app/static/photos
