@@ -45,7 +45,7 @@ def paginate_user_photos(username: str):
                        page=photos.next_num) if photos.has_next else None
     prev_url = url_for('main.user', username=user.username,
                        page=photos.prev_num) if photos.has_prev else None
-    return user, photos.items, next_url, prev_url, page
+    return user, photos, next_url, prev_url
 
 def validate_and_update_profile(form):
     if form.validate_on_submit():

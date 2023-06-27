@@ -31,7 +31,7 @@ def index():
 @bp.route('/user/<username>')
 @login_required
 def user(username):
-    user, photos, next_url, prev_url, page = paginate_user_photos(username)
+    user, photos, next_url, prev_url = paginate_user_photos(username)
     form = EmptyForm()
     return render_template('user.html', user=user, photos=photos.items,
                            next_url=next_url, prev_url=prev_url, form=form)
