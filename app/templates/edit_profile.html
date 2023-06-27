@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <h1>Edit Profile</h1>
+            <form action="{{ url_for('main.edit_profile')}}" method="post">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                  {{ form.username.label }}
+                  {{ form.username(class_="form-control", size=32) }}
+                </div>
+                <div class="mb-3">
+                  {{ form.about_me.label }}
+                  {{ form.about_me(class_="form-control", size=32) }}
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+              <br>
+        </div>
+    </div>
+{% endblock %}
