@@ -12,6 +12,7 @@ class User(UserMixin, db.Model):
     photos = db.relationship('Photo', backref='author', lazy='dynamic')
     about_me = db.Column(db.String(140))
     liked_photos = db.relationship('Photo', secondary='user_likes', backref=db.backref('users', lazy='dynamic'))
+    comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
     def __repr__(self):
         return f'<User {self.username}>'

@@ -35,10 +35,17 @@
             <br>
             
             <div id="comments{{ photo.id }}" class="comments" style="display: none;">
-            {% for comment in photo.comments.order_by(Comment.timestamp.desc()) %}
-                {% include '_comment.html' %}
-            {% endfor %}
-            
+                <div id="comments-container{{ photo.id }}">
+
+                    {% for comment in photo.comments.order_by(Comment.timestamp.desc()).limit(5) %}
+                        {% include '_comment.html' %}
+                    {% endfor %}
+                </div>
+                
+            {% if photo.comments.count() > 5 %}
+            <button id="show-more-btn{{ photo.id }}" data-page="2" onclick="showMore({{ photo.id }})" class="btn btn-info" >Show More</button>
+            {% endif %}
+
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <span>Add comment:</span>
@@ -52,9 +59,10 @@
                       <br>
                 </div>
             </div>
-        </div>
 
+            </div>
         </td>
     </tr>
-</table>
+</table>  
+
 

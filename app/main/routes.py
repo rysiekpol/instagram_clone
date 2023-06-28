@@ -84,7 +84,8 @@ def comment_photo(photo_id):
     form = CommentForm()
 
     if form.validate_on_submit():
-        comment = Comment(comment=form.comment.data, photo_id=photo_id, user_id=photo.user_id)
+        comment = Comment(comment=form.comment.data, photo_id=photo_id, user_id=current_user.id)
+        print(comment.user_id)
         if photo:
             if comment:
                 photo.comments.append(comment)
@@ -114,6 +115,18 @@ def get_photo_comments(photo_id):
 
     return comments
 
+@bp.route('/comments', methods=['GET'])
+def load_more_comments():
+    page = request.args.get('page', type=int)
+    photo_id = request.args.get('photoId')
+    photo = Photo.query.get(photo_id)
+
+    comments = photo.comments.order_by(Comment.timestamp.desc()).offset((page - 1) * 5).limit(5)
+    html = ''
+    for comment in comments:
+        html += render_template('_comment.html', comment=comment, photo=photo)
+
+    return jsonify(html=html)
 
 
 
