@@ -22,7 +22,7 @@ def index():
     validate = validate_and_add_photo(form)
     if validate:
         return validate
-    photos_db, next_url, prev_url, page = paginate_photos()
+    photos_db, next_url, prev_url, page = paginate_followed_photos()
 
     return render_template('index.html', form=form, form_c=form_c,
                            photos=photos_db.items, next_url=next_url,
@@ -38,6 +38,16 @@ def user(username):
 
     return render_template('user.html', user=user, photos=photos.items,
                            next_url=next_url, prev_url=prev_url, form=form, form_c=form_c,
+                           Comment=Comment)
+
+@bp.route('/explore')
+@login_required
+def explore():
+    photos, next_url, prev_url, page = paginate_photos()
+    form_c = CommentForm()
+
+    return render_template('index.html', photos=photos.items,
+                           next_url=next_url, prev_url=prev_url, page=page, form_c=form_c,
                            Comment=Comment)
 
 
@@ -128,6 +138,47 @@ def load_more_comments():
 
     return jsonify(html=html)
 
+@bp.route('/add-friend/<username>', methods=['POST'])
+@login_required
+def add_friend(username):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            flash(f'User {username} not found')
+            return redirect(url_for('main.index'))
+        
+        if user == current_user:
+            flash('You cannot add yourself as friend')
+            return redirect(url_for('main.user', username=username))
+        
+        current_user.add_friend(user)
+        db.session.commit()
+        flash(f'You are now friends with {username}')
+        return redirect(url_for('main.user', username=username))
+    else:
+        return redirect(url_for('main.index'))
+
+@bp.route('/remove-friend/<username>', methods=['POST'])
+@login_required
+def remove_friend(username):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            flash(f'User {username} not found')
+            return redirect(url_for('main.index'))
+        
+        if user == current_user:
+            flash('You cannot remove yourself as friend')
+            return redirect(url_for('main.user', username=username))
+        
+        current_user.remove_friend(user)
+        db.session.commit()
+        flash(f'You are not friends with {username}')
+        return redirect(url_for('main.user', username=username))
+    else:
+        return redirect(url_for('main.index'))
 
 
     
