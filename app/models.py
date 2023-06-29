@@ -11,6 +11,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     photos = db.relationship('Photo', backref='author', lazy='dynamic')
     about_me = db.Column(db.String(140))
+    liked_photos = db.relationship('Photo', secondary='user_likes', backref=db.backref('users', lazy='dynamic'))
 
     def __repr__(self):
         return f'<User {self.username}>'
@@ -30,12 +31,18 @@ class User(UserMixin, db.Model):
 def load_user(id):
     return User.query.get(int(id))
 
+class UserLikes(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    photo_id = db.Column(db.Integer, db.ForeignKey('photo.id'), primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
 class Photo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     path = db.Column(db.String(140))
     description = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    likes = db.Column(db.Integer, default=0)
 
     def __repr__(self):
         return f'<Post {self.description}>'

@@ -16,7 +16,16 @@
             <span id="photo{{ photo.id }}">{{ photo.description }}</span>
             <br><br>
             <a href="{{ url_for('main.display_image', filename=photo.path) }}"><img src="{{ url_for('main.display_image', filename=photo.path) }}" class="rounded mx-auto d-block" alt="photo{{ photo.id }}"></a>
-            <br><br>
+            <br>
+            <div class="text-center">
+              <button id="likeButton{{ photo.id }}" type="button" class="btn btn-outline-secondary">
+                <i class={% if photo in current_user.liked_photos %} "bi bi-star-fill" {% else %} "bi bi-star" {% endif%}></i>      
+
+                <span class="visually-hidden">Button</span>
+                <span class="badge bg-secondary" id="likeCount{{ photo.id }}">{{ photo.likes }}</span>
+              </button>
+            </div>
+            <br>
         </td>
     </tr>
 </table>
