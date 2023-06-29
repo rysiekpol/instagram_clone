@@ -13,13 +13,13 @@ def display_image(filename):
     return redirect(url_for('static', filename='photos/' + filename),
                     code=301)
 
+
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
     form = UploadForm()
-    validate = validate_and_add_photo(form)
-    if validate:
+    if (validate := validate_and_add_photo(form)):
         return validate
     photos_db, next_url, prev_url, page = paginate_photos()
 
@@ -41,8 +41,7 @@ def user(username):
 @login_required
 def edit_profile():
     form = EditProfileForm(current_user.username)
-    validate = validate_and_update_profile(form)
-    if validate:
+    if (validate := validate_and_update_profile(form)):
         return validate
     return render_template('edit_profile.html', title='Edit Profile',
                            form=form)
@@ -54,17 +53,16 @@ def like_photo(photo_id):
     photo = Photo.query.get(photo_id)
 
     if photo:
-        if photo in current_user.liked_photos and photo.likes > 0:
+        if photo in current_user.liked_photos:
             # User has already liked the photo, unlike it
             current_user.liked_photos.remove(photo)
-            photo.likes -= 1
+            photo.likes = Photo.likes - 1
             liked = False
         else:
             # User has not liked the photo, like it
-
             if photo not in current_user.liked_photos:
                 current_user.liked_photos.append(photo)
-            photo.likes += 1
+            photo.likes = Photo.likes + 1
             liked = True
 
         db.session.commit()
