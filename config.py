@@ -18,3 +18,5 @@ class Config():
     MAIL_PASSWORD = ""
     ADMINS = ['admin@example.com']
     POSTS_PER_PAGE = 25
+    #UPLOADED_PHOTOS_DEST = os.path.join(basedir, 'app/static/photos')
+    UPLOADED_PHOTOS_DEST = 'static/photos'
