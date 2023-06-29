@@ -3,7 +3,7 @@ from flask_login import logout_user
 
 from app.auth import bp
 from app.auth.forms import LoginForm, RegistrationForm
-from app.auth.services import *
+from app.auth.services import authenticate_user, validate_login_form, validate_registration_form
 
 
 @bp.route('/login', methods=['GET', 'POST'])

@@ -4,7 +4,8 @@ from app.main import bp
 from app.main.forms import UploadForm, EditProfileForm, EmptyForm
 from app import photos, db
 from app.models import Photo, User
-from app.main.services import *
+from app.main.services import validate_and_add_photo, paginate_photos, paginate_user_photos, validate_and_update_profile \
+    , handle_photos_in_database
 
 
 @bp.route('/display/<filename>')
@@ -53,20 +54,7 @@ def like_photo(photo_id):
     photo = Photo.query.get(photo_id)
 
     if photo:
-        if photo in current_user.liked_photos:
-            # User has already liked the photo, unlike it
-            current_user.liked_photos.remove(photo)
-            photo.likes = Photo.likes - 1
-            liked = False
-        else:
-            # User has not liked the photo, like it
-            if photo not in current_user.liked_photos:
-                current_user.liked_photos.append(photo)
-            photo.likes = Photo.likes + 1
-            liked = True
-
-        db.session.commit()
-        return jsonify({'likes': photo.likes, 'liked': liked})
+        return(handle_photos_in_database(photo))
     else:
         return jsonify({'error': 'Photo not found'}), 404
 
