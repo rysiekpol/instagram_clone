@@ -1,0 +1,19 @@
+<table class="table table-hover table-info">
+    <tr>
+        <td width="16px">
+            <a href="{{ url_for('main.user', username=comment.author.username) }}">
+                <img src="{{ comment.author.avatar(16) }}" />
+            </a>
+        </td>
+        <td>
+            {% set user_link %}
+                <a href="{{ url_for('main.user', username=comment.author.username) }}">
+                    {{ comment.author.username }}
+                </a>
+            {% endset %}
+            {{ user_link }} sent a comment {{ moment(comment.timestamp).fromNow() }}
+            <br>
+            <span id="comment{{ comment.id }}">{{ comment.comment }}</span>
+        </td>
+    </tr>
+</table>

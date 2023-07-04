@@ -34,6 +34,20 @@ def paginate_photos():
 
     return photos_db, next_url, prev_url, page
 
+def paginate_followed_photos():
+    page = request.args.get('page', 1, type=int)
+
+    photos_db = current_user.get_followed_photos().paginate(
+        page=page, per_page=current_app.config['POSTS_PER_PAGE'],
+        error_out=False)
+    
+    next_url = url_for('main.index', page=photos_db.next_num) \
+        if photos_db.has_next else None
+    prev_url = url_for('main.index', page=photos_db.prev_num) \
+        if photos_db.has_prev else None
+
+    return photos_db, next_url, prev_url, page
+
 
 def paginate_user_photos(username: str):
     user = User.query.filter_by(username=username).first_or_404()

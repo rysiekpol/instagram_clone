@@ -11,7 +11,7 @@ RUN python -m venv venv && \
     venv/bin/pip install -r requirements.txt && \
     chmod +x boot.sh
 
-ENV FLASK_APP microblog.py
+ENV FLASK_APP instagram.py
 
 EXPOSE 5000
 ENTRYPOINT ["./boot.sh"]

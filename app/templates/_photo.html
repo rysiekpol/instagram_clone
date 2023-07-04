@@ -24,8 +24,45 @@
                 <span class="visually-hidden">Button</span>
                 <span class="badge bg-secondary" id="likeCount{{ photo.id }}">{{ photo.likes }}</span>
               </button>
+
+              <button id="commentButton{{ photo.id }}" type="button" class="btn btn-outline-secondary" onclick="toggleComments({{ photo.id }})">
+                <i class="bi bi-chat-dots-fill"></i>  
+
+                <span class="visually-hidden">Button</span>
+                <span class="badge bg-secondary" id="commentCount{{ photo.id }}">{{ photo.comments.count() }}</span>
+              </button>
             </div>
             <br>
+            
+            <div id="comments{{ photo.id }}" class="comments" style="display: none;">
+                <div id="comments-container{{ photo.id }}">
+
+                    {% for comment in photo.comments.order_by(Comment.timestamp.desc()).limit(5) %}
+                        {% include '_comment.html' %}
+                    {% endfor %}
+                </div>
+                
+            {% if photo.comments.count() > 5 %}
+            <button id="show-more-btn{{ photo.id }}" data-page="2" onclick="showMore({{ photo.id }})" class="btn btn-info" >Show More</button>
+            {% endif %}
+
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <span>Add comment:</span>
+                    <form action="{{ url_for('main.comment_photo', photo_id=photo.id)}}" method="post">
+                        {{ form_c.hidden_tag() }}
+                        <div class="mb-3">
+                          {{ form_c.comment(class_="form-control", rows="3") }}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </form>
+                      <br>
+                </div>
+            </div>
+
+            </div>
         </td>
     </tr>
-</table>
+</table>  
+
+
