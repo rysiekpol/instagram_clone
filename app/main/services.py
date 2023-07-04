@@ -1,4 +1,4 @@
-from flask import redirect, url_for, flash, request, current_app
+from flask import redirect, url_for, flash, request, current_app, jsonify
 from app.main.forms import UploadForm
 from app import photos, db
 from flask_login import current_user
@@ -71,3 +71,20 @@ def validate_and_update_profile(form):
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
+
+
+def handle_photos_in_database(photo: Photo):
+    if photo in current_user.liked_photos:
+        # User has already liked the photo, unlike it
+        current_user.liked_photos.remove(photo)
+        photo.likes = Photo.likes - 1
+        liked = False
+    else:
+        # User has not liked the photo, like it
+        if photo not in current_user.liked_photos:
+            current_user.liked_photos.append(photo)
+        photo.likes = Photo.likes + 1
+        liked = True
+
+    db.session.commit()
+    return jsonify({'likes': photo.likes, 'liked': liked})

@@ -3,17 +3,15 @@ from flask_login import logout_user
 
 from app.auth import bp
 from app.auth.forms import LoginForm, RegistrationForm
-from app.auth.services import *
+from app.auth.services import authenticate_user, validate_login_form, validate_registration_form
 
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
-    auth = authenticate_user()
-    if auth:
+    if (auth := authenticate_user()):
         return auth
     form = LoginForm()
-    validate = validate_login_form(form)
-    if validate:
+    if (validate := validate_login_form(form)):
         return validate
     return render_template('auth/login.html', title='Sign In', form=form)
 
@@ -24,12 +22,10 @@ def logout():
 
 @bp.route('/register', methods=['GET','POST'])
 def register():
-    auth = authenticate_user()
-    if auth:
+    if (auth := authenticate_user()):
         return auth
     form = RegistrationForm()
-    validate = validate_registration_form(form)
-    if validate:
+    if (validate := validate_registration_form(form)):
         return validate
     
     return render_template('auth/register.html', title='Register',
