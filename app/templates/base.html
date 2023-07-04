@@ -13,6 +13,7 @@
             {{ moment.lang(g.locale) }}
 
             <script>
+                $( document ).ready(function(){
                 // Get all like buttons
                 var likeButtons = document.querySelectorAll('[id^="likeButton"]');
             
@@ -55,6 +56,7 @@
                     xhr.send();
                 });
                 });
+            });
             </script>
 
             <script>
