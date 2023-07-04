@@ -8,5 +8,4 @@ while true; do
     echo Upgrade command failed, retrying in 5 secs...
     sleep 5
 done
-flask translate compile
-exec gunicorn -b :5000 --access-logfile - --error-logfile - instagram:app
+exec gunicorn --bind 0.0.0.0:5000 --access-logfile - --error-logfile - instagram:app

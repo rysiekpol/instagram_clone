@@ -15,7 +15,7 @@
             <br>
             <span id="photo{{ photo.id }}">{{ photo.description }}</span>
             <br><br>
-            <a href="{{ url_for('main.display_image', filename=photo.path) }}"><img src="{{ url_for('main.display_image', filename=photo.path) }}" class="rounded mx-auto d-block" alt="photo{{ photo.id }}"></a>
+            <a href="{{ url_for('main.display_image', filename=photo.path) }}"><img src="{{ url_for('main.display_image', filename=photo.path) }}" class="rounded mx-auto d-block" style="max-width: 70%" alt="photo{{ photo.id }}"></a>
             <br>
             <div class="text-center">
               <button id="likeButton{{ photo.id }}" type="button" class="btn btn-outline-secondary">
