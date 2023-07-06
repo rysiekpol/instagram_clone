@@ -1,0 +1,25 @@
+version: '3'
+name: instagram_clone
+services:
+  instagram:
+    image: ${CI_REGISTRY_IMAGE}:instagram
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: instagram
+    expose:
+      - 5000
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+    volumes:
+      - .:/code
+      - /code/venv
+ 
+  nginx:
+    image: ${CI_REGISTRY_IMAGE}:nginx
+    container_name: nginx
+    build: nginx
+    ports:
+      - 80:20396
+    depends_on:
+      - instagram
