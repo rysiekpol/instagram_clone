@@ -35,6 +35,8 @@ publish:
 
         - docker push $IMAGE:instagram
         - docker push $IMAGE:nginx
+    only:
+        - dev
 
 deploy:
     stage: deploy
