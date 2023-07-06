@@ -6,18 +6,10 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: instagram
-    expose:
-      - 5000
+    ports:
+      - 5000:5000
     environment:
       - SECRET_KEY=${SECRET_KEY}
     volumes:
       - .:/code
       - /code/venv
- 
-  nginx:
-    container_name: nginx
-    build: nginx
-    ports:
-      - 80:20396
-    depends_on:
-      - instagram

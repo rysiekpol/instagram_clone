@@ -1,0 +1,62 @@
+image:
+    name: docker:latest
+
+services:
+    - docker:dind
+
+variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+
+before_script:
+    - export CI_PROJECT_NAMESPACE=$(echo "$CI_PROJECT_NAMESPACE" | tr '[:upper:]' '[:lower:]')
+    - export IMAGE=$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+
+after_script:
+    - docker logout $CI_REGISTRY
+
+stages:
+    - publish
+    - deploy
+
+publish:
+    variables:
+        DOCKER_DRIVER: overlay2
+        DOCKER_HOST: tcp://docker:2375
+        DOCKER_TLS_CERTDIR: ""
+    stage: publish
+    script:
+        - docker pull $IMAGE:instagram || true
+        - docker pull $IMAGE:nginx || true
+
+        - docker compose -f docker-compose.ci.yml build
+
+        - docker push $IMAGE:instagram
+        - docker push $IMAGE:nginx
+    only:
+        - dev
+
+deploy:
+    stage: deploy
+    tags:
+        - deployment
+    script:
+        - apk add openssh && apk add bash && apk add openssh-client
+        - chmod +x ./setup_env.sh
+        - bash ./setup_env.sh
+        - chmod og= $ID_RSA
+
+        #- eval $(ssh-agent -s)
+        #- echo "$ID_RSA" | ssh-add -
+
+        - chmod +x ./deploy.sh
+        - scp -o StrictHostKeyChecking=no -P $SERVER_PORT -i $ID_RSA -r * $SERVER_USER@$SERVER_IP:/home/flask
+        - bash ./deploy.sh
+
+    environment:
+        name: production
+        url: http://instagram.bieda.it
+    only:
+        - dev
